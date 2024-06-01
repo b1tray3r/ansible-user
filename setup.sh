@@ -12,5 +12,11 @@ if [ -z "$ANSIBLE_USER_PASSWORD" ]; then
 	read -s ANSIBLE_USER_PASSWORD
 fi
 
+# If the ansible user password is not set, exit
+if [ -z "$ANSIBLE_USER_PASSWORD" ]; then
+	echo "The ansible user password is required"
+	exit 1
+fi
+
 # Execute the playbook
 ansible-pull -l localhost -U https://github.com/b1tray3r/ansible-user.git -e "SEMAPHORE_PASSWORD=$ANSIBLE_USER_PASSWORD" install.yml
