@@ -19,4 +19,4 @@ if [ -z "$ANSIBLE_USER_PASSWORD" ]; then
 fi
 
 # Execute the playbook
-ansible-pull -l localhost -U https://github.com/b1tray3r/ansible-user.git -e "SEMAPHORE_PASSWORD=$ANSIBLE_USER_PASSWORD" install.yml
+ansible-pull -l localhost -U https://github.com/b1tray3r/ansible-user.git -e "ANSIBLE_USER_PASSWORD=$ANSIBLE_USER_PASSWORD" install.yml

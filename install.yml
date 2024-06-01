@@ -1,0 +1,37 @@
+---
+- hosts: localhost
+  become: yes
+  connection: local
+
+  tasks:
+    - name: add the ansible user
+      ansible.builtin.user:
+        name: ansible
+        state: present
+        shell: /bin/bash
+        create_home: yes
+        home: /home/ansible
+        password: "{{ ANSIBLE_USER_PASSWORD | password_hash('sha512') }}"
+        update_password: on_create
+
+    - name: create the .ssh directory for the ansible user
+      ansible.builtin.file:
+        path: /home/ansible/.ssh
+        state: directory
+        owner: ansible
+        group: ansible
+        mode: "0700"
+
+    - name: Download foo.conf
+      ansible.builtin.get_url:
+        url: https://github.com/b1tray3r.keys
+        dest: /home/ansible/.ssh/authorized_keys
+        mode: '0600'
+        owner: ansible
+        group: ansible
+
+    - name: add the user to the sudoers file
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        line: "ansible ALL=(ALL) NOPASSWD: ALL"
+        validate: "/usr/sbin/visudo -cf %s"
